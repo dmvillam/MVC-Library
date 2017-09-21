@@ -11,6 +11,17 @@ namespace MVC
     // 'protected string primaryKey = "id"', being the value of "id" the default
     // that you can change into the derived models
 
+    /*
+     * TODO: convert Model<T>.data from Dictionary<string, string> to
+     * Dictionary<string, object> or even to Hashtable. The idea is being 
+     * able to retrieve correct type from DBConnect.dataReader[field]
+     */
+
+    /*
+     * TODO: Model<T> should be derived from class type that is data,
+     * in order to not need anymore data field
+     */
+
     public abstract class Model<T> where T : Model<T>
     {
         public int id;
@@ -49,8 +60,9 @@ namespace MVC
             DBConnect connect = new DBConnect(typeof(T));
             model.id = connect.Insert(new string[] {
                 String.Join(", ", data.Keys.ToArray<string>()),
-                "'" + String.Join("', '", data.Values.ToArray<string>()) + "'"
+                Model<T>.ParseNullAndBoolean(data.Values)
             });
+            model.data = data;
             return model;
         }
 
@@ -87,10 +99,33 @@ namespace MVC
 
         public static Collection<T> where(string key, string oper, string value)
         {
+            string val = String.Format("'{0}'", value);
+
             List<Dictionary<string, string>> list
                 = DBQuery.use_table(typeof(T))
                 .select(new string[] { "*" })
-                .where(key, oper, value).get();
+                .where(key, oper, val).get();
+
+            return Model<T>.ListToCollection(list);
+        }
+
+        public static Collection<T> where(string[] conditions)
+        {
+            List<Dictionary<string, string>> list;
+            if (conditions.Length > 1)
+            {
+                DBQuery query = DBQuery.use_table(typeof(T))
+                    .select(new string[] { "*" })
+                    .where(conditions[0]);
+
+                for (int i = 1; i < conditions.Length; i++ )
+                    query = query.and(conditions[i]);
+
+                list = query.get();
+            }
+            else list = DBQuery.use_table(typeof(T))
+                .select(new string[] { "*" })
+                .where(conditions[0]).get();
 
             return Model<T>.ListToCollection(list);
         }
@@ -189,6 +224,19 @@ namespace MVC
                 models.Add(model);
             }
             return models;
+        }
+
+        private static string ParseNullAndBoolean(Dictionary<string, string>.ValueCollection values)
+        {
+            List<string> list = new List<string>();
+            foreach (string s in values)
+            {
+                string to_add = (s != null) ? String.Format("'{0}'", s) : "NULL";
+                to_add = (s == "True") ? "True" : to_add;
+                to_add = (s == "False") ? "False" : to_add;
+                list.Add(to_add);
+            }
+            return String.Join(", ", list);
         }
     }
 }

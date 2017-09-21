@@ -167,8 +167,11 @@ namespace MVC
 
                 while (dataReader.Read())
                 {
-                    for (int i = 0; i < columns.Length; i++)
-                        list.Add(dataReader[columns[i]] + "");
+                    foreach (string column in columns)
+                    {
+                        object read = dataReader[column];
+                        list.Add((read == DBNull.Value) ? null : read.ToString());
+                    }
                 }
                 dataReader.Close();
                 this.CloseConnection();
@@ -193,9 +196,12 @@ namespace MVC
                 {
                     Dictionary<string, string> elem = new Dictionary<string, string>();
                     elem.Add(id_label, dataReader[id_label].ToString());
-                    for (int i = 0; i < columns.Length; i++)
-                        if (columns[i] != id_label)
-                            elem.Add(columns[i], dataReader[columns[i]].ToString());
+                    foreach (string column in columns)
+                        if (column != id_label)
+                        {
+                            object read = dataReader[column];
+                            elem.Add(column, (read == DBNull.Value) ? null : read.ToString());
+                        }
                     output.Add(elem);
                 }
                 dataReader.Close();

@@ -9,13 +9,14 @@ namespace MVC
 {
     class DBQuery : DBConnect
     {
-        private string q_select, q_join, q_where;
+        private string q_select, q_join, q_where, q_and;
 
         public DBQuery(Type type) : base(type)
         {
             q_select = String.Empty;
             q_join = String.Empty;
             q_where = String.Empty;
+            q_and = string.Empty;
         }
 
         public static DBQuery use_table(Type type)
@@ -50,11 +51,29 @@ namespace MVC
             return this;
         }
 
+        public DBQuery and(string key1, string oper, string key2)
+        {
+            q_and += String.Format("AND {0} {1} {2} ", key1, oper, key2);
+            return this;
+        }
+
+        public DBQuery where(string condition)
+        {
+            q_where = String.Format("WHERE {0} ", condition);
+            return this;
+        }
+
+        public DBQuery and(string condition)
+        {
+            q_and += String.Format("AND {0} ", condition);
+            return this;
+        }
+
         public List<Dictionary<string, string>> get()
         {
             string query;
-            if ((q_select + q_join + q_where) != String.Empty)
-                query = q_select + q_join + q_where;
+            if ((q_select + q_join + q_where + q_and) != String.Empty)
+                query = q_select + q_join + q_where + q_and;
             else throw new Exception("Error: you can't have a query without a query request!");
 
             List<Dictionary<string, string>> output = new List<Dictionary<string, string>>();
@@ -68,9 +87,10 @@ namespace MVC
                     // TODO: change "id" by id_label, and prevent the .Add()
                     // execution when columns[i]==id_label
                     Dictionary<string, string> elem = new Dictionary<string, string>();
-                    elem.Add("id", dataReader["id"].ToString());
+                    elem.Add(id_label, dataReader[id_label].ToString());
                     for (int i = 0; i < columns.Length; i++)
-                        elem.Add(columns[i], dataReader[columns[i]].ToString());
+                        if (columns[i] != id_label)
+                            elem.Add(columns[i], dataReader[columns[i]].ToString());
                     output.Add(elem);
                 }
                 dataReader.Close();

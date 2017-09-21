@@ -42,14 +42,10 @@ namespace MVC
             string[] columns = Model<T>.GetColumns();
             T model = (T)Activator.CreateInstance(typeof(T), false);
 
-            List<string> values = new List<string>();
-            for (int i = 0; i < columns.Length; i++)
-                values.Add(data[columns[i]]);
-
             DBConnect connect = new DBConnect(typeof(T));
             connect.Insert(new string[] {
-                String.Join(",", columns),
-                "'" + String.Join("','", values) + "'"
+                String.Join(", ", data.Keys.ToArray<string>()),
+                "'" + String.Join("', '", data.Values.ToArray<string>()) + "'"
             });
             List<Dictionary<string, string>> list = connect.Select();
             model.id = Convert.ToInt32(list[list.Count - 1][connect.id_label]);

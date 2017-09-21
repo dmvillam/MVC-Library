@@ -14,7 +14,6 @@ namespace MVC
 
         public Model()
         {
-            id = 0;
             data = new Dictionary<string, string>();
         }
 

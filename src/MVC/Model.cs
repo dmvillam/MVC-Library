@@ -118,13 +118,13 @@ namespace MVC
             return model;
         }
 
-        protected dynamic belongsTo<U>()
+        protected U belongsTo<U>()
             where U : Model<U>
         {
             return (U)new BelongsTo<U>(this, Model<T>.GetConnector<U>());
         }
 
-        public Collection<U> hasMany<U>()
+        public HasMany<U> hasMany<U>()
             where U : Model<U>
         {
             return new HasMany<U>(Model<T>.GetTable(),
@@ -132,7 +132,7 @@ namespace MVC
                 Model<U>.GetConnector<T>(), this.id.ToString());
         }
 
-        public Collection<U> belongsToMany<U>()
+        public BelongsToMany<U> belongsToMany<U>()
             where U : Model<U>
         {
             return new BelongsToMany<U>(Model<T>.GetTable(),
@@ -140,33 +140,6 @@ namespace MVC
                 Model<U>.GetColumns(), Model<T>.GetCrossTable<U>(),
                 Model<U>.GetConnector<T>(), Model<T>.GetConnector<U>(),
                 this.id.ToString());
-
-            //string table1 = Model<T>.GetTable();
-            //string[] columns1 = Model<T>.GetColumns();
-            //string table2 = Model<U>.GetTable();
-            //string[] columns2 = Model<U>.GetColumns();
-            //string cross_table = Model<T>.GetCrossTable<U>();
-            //string connector1 = Model<U>.GetConnector<T>();
-            //string connector2 = Model<T>.GetConnector<U>();
-
-            //List<Dictionary<string, string>> list =
-            //    DBQuery.use_table(typeof(U), cross_table)
-            //    .select(new string[] { table2 + ".*" })
-            //    .inner_join(table2, table2 + ".id", "=", cross_table + "." + connector2)
-            //    .inner_join(table1, table1 + ".id", "=", cross_table + "." + connector1)
-            //    .where(table1 + ".id", "=", this.id.ToString())
-            //    .get();
-
-            //Collection<U> models = new Collection<U>();
-            //foreach (Dictionary<string, string> elem in list)
-            //{
-            //    U model = (U)Activator.CreateInstance(typeof(U), false);
-            //    model.id = Convert.ToInt32(elem["id"]);
-            //    for (int i = 0; i < columns2.Length; i++)
-            //        model.data.Add(columns2[i], elem[columns2[i]]);
-            //    models.Add(model);
-            //}
-            //return models;
         }
 
         private static string GetTable()
@@ -175,24 +148,28 @@ namespace MVC
                 .GetField("Table", BindingFlags.NonPublic | BindingFlags.Static)
                 .GetValue(null).ToString();
         }
+
         private static string[] GetColumns()
         {
             return (string[])typeof(T)
                 .GetField("Columns", BindingFlags.NonPublic | BindingFlags.Static)
                 .GetValue(null);
         }
+
         private static string GetIdLabel()
         {
             if (typeof(T).GetField("IdLabel", BindingFlags.NonPublic | BindingFlags.Static) != null)
                 return (string)typeof(T).GetField("IdLabel", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
             else return "id";
         }
+
         private static string GetConnector<myclass>()
         {
             return ((Dictionary<string, string>)typeof(T)
                 .GetField("Connectors", BindingFlags.NonPublic | BindingFlags.Static)
                 .GetValue(null))[typeof(myclass).Name];
         }
+
         private static string GetCrossTable<U>() where U : Model<U>
         {
             List<string> list = new List<string> {

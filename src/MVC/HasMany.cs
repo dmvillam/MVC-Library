@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MVC
 {
-    class HasMany<T> : Collection<T> where T : Model<T>
+    public class HasMany<T> : Collection<T> where T : Model<T>
     {
         public HasMany(string table1, string table2, string[] columns2, string connector, string id)
         {

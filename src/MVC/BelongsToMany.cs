@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MVC
 {
-    class BelongsToMany<T> : Collection<T> where T : Model<T>
+    public class BelongsToMany<T> : Collection<T> where T : Model<T>
     {
         public BelongsToMany(string table1, string table2, string[] columns1,
             string[] columns2, string cross_table, string connector1,

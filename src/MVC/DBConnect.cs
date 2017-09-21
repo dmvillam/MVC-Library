@@ -27,7 +27,8 @@ namespace MVC
         // Constructor
         public DBConnect(Type type)
         {
-            Initialize();
+            Initialize(type.GetField("ConfigData",
+                BindingFlags.NonPublic | BindingFlags.Static));
             this.table = (string)type
                 .GetField("Table", BindingFlags.NonPublic | BindingFlags.Static)
                 .GetValue(null);
@@ -39,7 +40,7 @@ namespace MVC
             this.id_label = (f != null) ? (string)f.GetValue(null) : "id";
         }
         //Initialize values
-        protected void Initialize()
+        protected void Initialize(FieldInfo cfgFieldInfo)
         {
             // Default values
             Dictionary<string, string> config_data
@@ -49,8 +50,13 @@ namespace MVC
                 {"uid", "root"},
                 {"password", "armagedon2"}
             };
-            
-            if (File.Exists("dbconfig.ini"))
+
+            if (cfgFieldInfo != null)
+            {
+                config_data = (Dictionary<string, string>)cfgFieldInfo
+                    .GetValue(null);
+            }
+            else if (File.Exists("dbconfig.ini"))
                 RawParser.Parse1(Raw.Raw.Get("dbconfig.ini"), config_data);
 
             server = config_data["server"];

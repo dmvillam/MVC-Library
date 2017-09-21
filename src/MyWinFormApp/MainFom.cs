@@ -31,6 +31,10 @@ namespace MyWinFormApp
                 ));*/
 
             //Client.find(1).bills().attach(1);
+
+            //Client client = Client.find(1);
+            Bill bill = Bill.find(1);
+            //Item item = Item.find(1);
         }
 
         private void createBillButton_Click(object sender, EventArgs e)

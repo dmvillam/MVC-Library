@@ -1,5 +1,12 @@
 *.rar
 *.zip
 
-src/MVC/bin/
-src/MyWinFormApp/bin/
+/src/MVC/bin/
+/src/MyWinFormApp/bin/
+
+!/src/
+/src/*
+!/src/MVC/
+!/src/MyWinFormApp/
+!/src/MyWinFormApp.sln
+!/src/MyWinFormApp.v12.suo

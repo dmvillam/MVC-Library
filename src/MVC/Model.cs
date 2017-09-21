@@ -9,41 +9,45 @@ namespace MVC
 {
     public class Model<T> where T : Model<T>
     {
-        public virtual string table { get { return ""; } }
-        public virtual string[] columns { get { return new string[] { }; } }
-
         public int id;
         public Dictionary<string, string> data;
 
         public Model()
         {
+            id = 0;
             data = new Dictionary<string, string>();
         }
         public static T find(int id)
         {
-            dynamic model = Activator.CreateInstance(typeof(T), false);
-            DBConnect connect = new DBConnect(model.table, model.columns);
+            string table = Model<T>.GetTable();
+            string[] columns = Model<T>.GetColumns();
+            T model = (T)Activator.CreateInstance(typeof(T), false);
+
+            DBConnect connect = new DBConnect(table, columns);
             List<string> values = connect.Select(id);
 
-            if (values.Count == 1)
+            if (values.Count > 0)
             {
                 model.id = id;
-                for (int i = 0; i < model.columns.Length; i++)
-                    model.data.Add(model.columns[i], values[i]);
+                for (int i = 0; i < columns.Length; i++)
+                    model.data.Add(columns[i], values[i]);
                 return model;
             }
             else return null;
         }
         public static T create(Dictionary<string, string> data)
         {
-            dynamic model = Activator.CreateInstance(typeof(T), false);
-            List<string> values = new List<string>();
-            for (int i = 0; i < model.columns.Length; i++)
-                values.Add(data[model.columns[i]]);
+            string table = Model<T>.GetTable();
+            string[] columns = Model<T>.GetColumns();
+            T model = (T)Activator.CreateInstance(typeof(T), false);
 
-            DBConnect connect = new DBConnect(model.table, model.columns);
+            List<string> values = new List<string>();
+            for (int i = 0; i < columns.Length; i++)
+                values.Add(data[columns[i]]);
+
+            DBConnect connect = new DBConnect(table, columns);
             connect.Insert(new string[] {
-                String.Join(",", model.columns),
+                String.Join(",", columns),
                 "'" + String.Join("','", values) + "'"
             });
             List<Dictionary<string, string>> list = connect.Select();
@@ -54,6 +58,9 @@ namespace MVC
         }
         public void save()
         {
+            string table = Model<T>.GetTable();
+            string[] columns = Model<T>.GetColumns();
+
             DBConnect dbconnect = new DBConnect(table, columns);
             List<string> list = new List<string>();
             for (int i = 0; i < columns.Length; i++)
@@ -62,36 +69,40 @@ namespace MVC
         }
         public static List<T> all()
         {
-            Type type = typeof(T);
-            dynamic m = Activator.CreateInstance(type, false);
-            DBConnect connect = new DBConnect(m.table, m.columns);
+            string table = Model<T>.GetTable();
+            string[] columns = Model<T>.GetColumns();
+
+            T m = (T)Activator.CreateInstance(typeof(T), false);
+            DBConnect connect = new DBConnect(table, columns);
             List<Dictionary<string, string>> list = connect.Select();
             List<T> models = new List<T>();
             foreach (Dictionary<string, string> elem in list)
             {
-                dynamic model = Activator.CreateInstance(type, false);
+                T model = (T)Activator.CreateInstance(typeof(T), false);
                 model.id = Convert.ToInt32(elem["id"]);
-                for (int i = 0; i < m.columns.Length; i++)
-                    model.data.Add(m.columns[i], elem[m.columns[i]]);
+                for (int i = 0; i < columns.Length; i++)
+                    model.data.Add(columns[i], elem[columns[i]]);
                 models.Add(model);
             }
             return models;
         }
         public static void destroy(int id)
         {
+            string table = Model<T>.GetTable();
+            string[] columns = Model<T>.GetColumns();
+
             dynamic model = Activator.CreateInstance(typeof(T), false);
-            DBConnect connect = new DBConnect(model.table, model.columns);
+            DBConnect connect = new DBConnect(table, columns);
             connect.Delete(id);
         }
-        protected dynamic hasOne(Type type)
+        protected dynamic hasOne<U>()
         {
+            string table = Model<T>.GetTable();
+            string[] columns = Model<T>.GetColumns();
+
             DBConnect connect = new DBConnect(table, columns);
 
-
-            dynamic model = Activator.CreateInstance(type, false);
-            string mytable = table;
-            string[] mycols = columns;
-
+            dynamic model = Activator.CreateInstance(typeof(U), false);
             model.id = 0;
             Dictionary<string, string> newdata = new Dictionary<string, string>();
             for (int i = 0; i < model.columns.Length; i++)
@@ -185,6 +196,28 @@ namespace MVC
                 models.Add(model);
             }
             return models;
+        }
+
+        private static string GetTable()
+        {
+            return typeof(T)
+                .GetField("Table", BindingFlags.NonPublic | BindingFlags.Static)
+                .GetValue(null).ToString();
+        }
+        private static string[] GetColumns()
+        {
+            return (string[])typeof(T)
+                .GetField("Columns", BindingFlags.NonPublic | BindingFlags.Static)
+                .GetValue(null);
+        }
+
+        public void SetDataValue(string key, string value)
+        {
+            Dictionary<string, string> dict
+                = (Dictionary<string, string>)this.GetType().GetField("data").GetValue(this);
+            dict.GetType()
+                .GetMethod("Add", new[] { key.GetType(), value.GetType() })
+                .Invoke(dict, new object[] { key, value });
         }
     }
 }

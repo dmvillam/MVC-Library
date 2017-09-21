@@ -10,8 +10,8 @@ namespace MyWinFormApp
 {
     class Bill : Model<Bill>
     {
-        public override string table { get { return "facturas"; } }
-        public override string[] columns { get { return new string[] { "notas", /*"fecha inicio", "fecha vencimiento",*/ "id_cliente" }; } }
+        static string Table = "facturas";
+        static string[] Columns = { "notas", /*"fecha inicio", "fecha vencimiento",*/ "id_cliente" };
 
         public Client client()
         {

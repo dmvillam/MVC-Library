@@ -10,8 +10,8 @@ namespace MyWinFormApp
 {
     class Item : Model<Item>
     {
-        public override string table { get { return "artículos"; } }
-        public override string[] columns { get { return new string[] { "nombre", "descr", "precio", "cantidad_inicial", "cantidad" }; } }
+        static string Table = "artículos";
+        static string[] Columns = { "nombre", "descr", "precio", "cantidad_inicial", "cantidad" };
 
         public List<Bill> bills()
         {

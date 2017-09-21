@@ -1,0 +1,5 @@
+*.rar
+*.zip
+
+src/MVC/bin/
+src/MyWinFormApp/bin/

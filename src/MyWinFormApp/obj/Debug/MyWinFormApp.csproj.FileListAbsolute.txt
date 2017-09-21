@@ -1,0 +1,72 @@
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\bin\Debug\MyWinFormApp.exe.config
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\bin\Debug\MyWinFormApp.exe
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\bin\Debug\MyWinFormApp.pdb
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.csprojResolveAssemblyReference.cache
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.Properties.Resources.resources
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.csproj.GenerateResource.Cache
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.exe
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.pdb
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.MainForm.resources
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.LoadingForm.resources
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.ManageClientsForm.resources
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\bin\Debug\MySql.Data.dll
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.CreateClientForm.resources
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.EditClientForm.resources
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.CreateBillForm.resources
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.SelectClientForm.resources
+C:\Users\Admin\Important Stuff\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.SelectItemForm.resources
+C:\Users\Admin\Desktop\pendrive\C#\C#\MyWinFormApp\MyWinFormApp\bin\Debug\MyWinFormApp.exe.config
+C:\Users\Admin\Desktop\pendrive\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.exe
+C:\Users\Admin\Desktop\pendrive\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.pdb
+C:\Users\Admin\Desktop\pendrive\C#\C#\MyWinFormApp\MyWinFormApp\bin\Debug\MyWinFormApp.exe
+C:\Users\Admin\Desktop\pendrive\C#\C#\MyWinFormApp\MyWinFormApp\bin\Debug\MyWinFormApp.pdb
+C:\Users\Admin\Desktop\pendrive\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.csprojResolveAssemblyReference.cache
+C:\Users\Admin\Desktop\pendrive\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.CreateClientForm.resources
+C:\Users\Admin\Desktop\pendrive\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.EditClientForm.resources
+C:\Users\Admin\Desktop\pendrive\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.MainForm.resources
+C:\Users\Admin\Desktop\pendrive\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.LoadingForm.resources
+C:\Users\Admin\Desktop\pendrive\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.ManageClientsForm.resources
+C:\Users\Admin\Desktop\pendrive\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.Properties.Resources.resources
+C:\Users\Admin\Desktop\pendrive\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.SelectClientForm.resources
+C:\Users\Admin\Desktop\pendrive\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.SelectItemForm.resources
+C:\Users\Admin\Desktop\pendrive\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.csproj.GenerateResource.Cache
+C:\Users\Admin\Desktop\pendrive\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.CreateBillForm.resources
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\bin\Debug\MyWinFormApp.exe.config
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.exe
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.pdb
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\bin\Debug\MyWinFormApp.exe
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\bin\Debug\MyWinFormApp.pdb
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.csprojResolveAssemblyReference.cache
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.CreateBillForm.resources
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.CreateClientForm.resources
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.EditClientForm.resources
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.MainForm.resources
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.LoadingForm.resources
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.ManageClientsForm.resources
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.Properties.Resources.resources
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.SelectClientForm.resources
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.SelectItemForm.resources
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.csproj.GenerateResource.Cache
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.ManageInventoryForm.resources
+C:\Users\Admin\Desktop\pendrive\MyWorkStuff\C#\C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.CreateItemForm.resources
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\bin\Debug\MyWinFormApp.exe.config
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.exe
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.pdb
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\bin\Debug\MyWinFormApp.exe
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\bin\Debug\MyWinFormApp.pdb
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.csprojResolveAssemblyReference.cache
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.CreateBillForm.resources
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.CreateClientForm.resources
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.CreateItemForm.resources
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.EditClientForm.resources
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.MainForm.resources
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.LoadingForm.resources
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.ManageClientsForm.resources
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.ManageInventoryForm.resources
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.Properties.Resources.resources
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.SelectClientForm.resources
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.SelectItemForm.resources
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\obj\Debug\MyWinFormApp.csproj.GenerateResource.Cache
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\bin\Debug\MVC.dll
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\bin\Debug\MySql.Data.dll
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MyWinFormApp\bin\Debug\MVC.pdb

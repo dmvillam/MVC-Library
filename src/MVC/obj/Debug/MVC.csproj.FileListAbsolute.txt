@@ -1,0 +1,5 @@
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MVC\obj\Debug\MVC.csprojResolveAssemblyReference.cache
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MVC\bin\Debug\MVC.dll
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MVC\bin\Debug\MVC.pdb
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MVC\obj\Debug\MVC.dll
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\MVC\obj\Debug\MVC.pdb

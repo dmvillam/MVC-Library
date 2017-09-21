@@ -1,0 +1,246 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using MySql.Data.MySqlClient;
+using System.IO;
+using System.Diagnostics;
+
+namespace MVC
+{
+    public class DBConnect
+    {
+        protected MySqlConnection connection;
+        private string server;
+        private string database;
+        private string uid;
+        private string password;
+        protected string table;
+        protected string[] columns;
+
+        // Constructor
+        public DBConnect(string table, string[] columns)
+        {
+            Initialize();
+            this.table = table;
+            this.columns = columns;
+        }
+        //Initialize values
+        protected void Initialize()
+        {
+            server = "localhost";
+            database = "facturación";
+            uid = "root";
+            password = "armagedon2";
+            string connectionString = string.Format(
+                "SERVER={0};DATABASE={1};UID={2};PASSWORD={3};",
+                server, database, uid, password);
+            connection = new MySqlConnection(connectionString);
+        }
+        // Open connection to database
+        protected bool OpenConnection()
+        {
+            try
+            {
+                connection.Open();
+                return true;
+            }
+            catch (MySqlException ex)
+            {
+                switch (ex.Number)
+                {
+                    case 0:
+                        //MessageBox.Show("Cannot connect to server. Contact administrator.");
+                        break;
+                    case 1045:
+                        //MessageBox.Show("Invalid username/password, please try again.");
+                        break;
+                }
+                return false;
+            }
+        }
+        // Close connection
+        protected bool CloseConnection()
+        {
+            try
+            {
+                connection.Close();
+                return true;
+            }
+            catch (MySqlException ex)
+            {
+                //MessageBox.Show(ex.Message);
+                return false;
+            }
+        }
+        // Insert statement
+        public void Insert(string[] parameters)
+        {
+            string query = "INSERT INTO " + table + " (" + parameters[0] + ") VALUES (" + parameters[1] + ")";
+
+            // Open connection
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.ExecuteNonQuery();
+                this.CloseConnection();
+            }
+        }
+        // Update statement
+        public void Update(int id, List<string> values)
+        {
+            string query = "UPDATE " + table + " SET " + String.Join(",", values) + " WHERE id='" + id + "'";
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.CommandText = query;
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+                this.CloseConnection();
+            }
+        }
+        // Delete statement
+        public void Delete(int id)
+        {
+            string query = "DELETE FROM " + table + " WHERE id='" + id + "'";
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.ExecuteNonQuery();
+                this.CloseConnection();
+            }
+        }
+        public List<string> Select(int id)
+        {
+            string query = "SELECT * FROM " + table + " WHERE id = " + id + ";";
+
+            List<string> list = new List<string>();
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    for (int i = 0; i < columns.Length; i++)
+                        list.Add(dataReader[columns[i]] + "");
+                }
+                dataReader.Close();
+                this.CloseConnection();
+                return list;
+            }
+            else
+            {
+                return list;
+            }
+        }
+        public List<Dictionary<string, string>> Select()
+        {
+            string query = "SELECT * FROM " + table;
+
+            List<Dictionary<string, string>> output = new List<Dictionary<string, string>>();
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    Dictionary<string, string> elem = new Dictionary<string, string>();
+                    elem.Add("id", dataReader["id"].ToString());
+                    for (int i = 0; i < columns.Length; i++)
+                        elem.Add(columns[i], dataReader[columns[i]].ToString());
+                    output.Add(elem);
+                }
+                dataReader.Close();
+                this.CloseConnection();
+                return output;
+            }
+            else
+            {
+                return output;
+            }
+        }
+        // Count statement
+        public int Count()
+        {
+            string query = "SELECT Count(*) FROM " + table;
+            int Count = -1;
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                Count = Int16.Parse(cmd.ExecuteScalar() + "");
+                this.CloseConnection();
+                return Count;
+            }
+            else
+            {
+                return Count;
+            }
+        }
+        // Backup
+        public void Backup()
+        {
+            try
+            {
+                DateTime Time = DateTime.Now;
+                string path = string.Format(
+                    "C:\\MySqlBackup{0}-{1}-{2}-{3}-{4}-{5}-{6}.sql",
+                    Time.Year, Time.Month, Time.Day, Time.Hour,
+                    Time.Minute, Time.Second, Time.Millisecond);
+                StreamWriter file = new StreamWriter(path);
+
+                ProcessStartInfo psi = new ProcessStartInfo();
+                psi.FileName = "mysqldump";
+                psi.RedirectStandardInput = false;
+                psi.RedirectStandardOutput = true;
+                psi.Arguments = string.Format(@"-u{0} -p{1} -h{2} {3}", uid, password, server, database);
+                psi.UseShellExecute = false;
+
+                Process process = Process.Start(psi);
+
+                string output;
+                output = process.StandardOutput.ReadToEnd();
+                file.WriteLine(output);
+                process.WaitForExit();
+                file.Close();
+                process.Close();
+            }
+            catch (IOException ex)
+            {
+                //MessageBox.Show("Error, unable to backup!");
+            }
+        }
+        // Restore
+        public void Restore()
+        {
+            try
+            {
+                string path;
+                path = "C:\\MySqlBackup.sql";
+                StreamReader file = new StreamReader(path);
+                string input = file.ReadToEnd();
+                file.Close();
+
+                ProcessStartInfo psi = new ProcessStartInfo();
+                psi.FileName = "mysql";
+                psi.RedirectStandardInput = true;
+                psi.RedirectStandardOutput = false;
+                psi.Arguments = string.Format(@"-u{0} -p{1} -h{2} {3}", uid, password, server, database);
+                psi.UseShellExecute = false;
+
+                Process process = Process.Start(psi);
+                process.StandardInput.WriteLine(input);
+                process.StandardInput.Close();
+                process.WaitForExit();
+                process.Close();
+            }
+            catch (IOException ex)
+            {
+                //MessageBox.Show("Error , unable to Restore!");
+            }
+        }
+    }
+}

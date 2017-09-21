@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BelongsTo.cs" />
+    <Compile Include="BelongsToMany.cs" />
     <Compile Include="Collection.cs" />
     <Compile Include="DBConnect.cs" />
     <Compile Include="DBQuery.cs" />

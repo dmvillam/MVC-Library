@@ -8,13 +8,13 @@ namespace MVC
 {
     class HasMany<T> : Collection<T> where T : Model<T>
     {
-        public HasMany(string table1, string table2, string[] columns2, string connector, dynamic m1, dynamic m2)
+        public HasMany(string table1, string table2, string[] columns2, string connector, string id)
         {
             List<Dictionary<string, string>> list =
                 DBQuery.use_table(typeof(T))
                 .select(new string[] { table2 + ".*" })
                 .inner_join(table1, table2 + "." + connector, "=", table1 + ".id")
-                .where(table1 + ".id", "=", this.id.ToString())
+                .where(table1 + ".id", "=", id)
                 .get();
 
             foreach (Dictionary<string, string> elem in list)

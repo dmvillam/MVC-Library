@@ -129,21 +129,31 @@ namespace MVC
         {
             return new HasMany<U>(Model<T>.GetTable(),
                 Model<U>.GetTable(), Model<U>.GetColumns(),
-                Model<U>.GetConnector<T>(),
-                Activator.CreateInstance(typeof(T), false),
-                Activator.CreateInstance(typeof(U), false));
+                Model<U>.GetConnector<T>(), this.id.ToString());
+        }
+
+        public Collection<U> belongsToMany<U>()
+            where U : Model<U>
+        {
+            return new BelongsToMany<U>(Model<T>.GetTable(),
+                Model<U>.GetTable(), Model<T>.GetColumns(),
+                Model<U>.GetColumns(), Model<T>.GetCrossTable<U>(),
+                Model<U>.GetConnector<T>(), Model<T>.GetConnector<U>(),
+                this.id.ToString());
 
             //string table1 = Model<T>.GetTable();
+            //string[] columns1 = Model<T>.GetColumns();
             //string table2 = Model<U>.GetTable();
             //string[] columns2 = Model<U>.GetColumns();
-            //string connector = Model<U>.GetConnector<T>();
+            //string cross_table = Model<T>.GetCrossTable<U>();
+            //string connector1 = Model<U>.GetConnector<T>();
+            //string connector2 = Model<T>.GetConnector<U>();
 
-            //dynamic m1 = Activator.CreateInstance(typeof(T), false);
-            //dynamic m2 = Activator.CreateInstance(typeof(U), false);
             //List<Dictionary<string, string>> list =
-            //    DBQuery.use_table(typeof(U))
+            //    DBQuery.use_table(typeof(U), cross_table)
             //    .select(new string[] { table2 + ".*" })
-            //    .inner_join(table1, table2 + "." + connector, "=", table1 + ".id")
+            //    .inner_join(table2, table2 + ".id", "=", cross_table + "." + connector2)
+            //    .inner_join(table1, table1 + ".id", "=", cross_table + "." + connector1)
             //    .where(table1 + ".id", "=", this.id.ToString())
             //    .get();
 
@@ -157,37 +167,6 @@ namespace MVC
             //    models.Add(model);
             //}
             //return models;
-        }
-
-        public dynamic belongsToMany<U>()
-            where U : Model<U>
-        {
-            string table1 = Model<T>.GetTable();
-            string[] columns1 = Model<T>.GetColumns();
-            string table2 = Model<U>.GetTable();
-            string[] columns2 = Model<U>.GetColumns();
-            string cross_table = Model<T>.GetCrossTable<U>();
-            string connector1 = Model<U>.GetConnector<T>();
-            string connector2 = Model<T>.GetConnector<U>();
-
-            List<Dictionary<string, string>> list =
-                DBQuery.use_table(typeof(U), cross_table)
-                .select(new string[] { table2 + ".*" })
-                .inner_join(table2, table2 + ".id", "=", cross_table + "." + connector2)
-                .inner_join(table1, table1 + ".id", "=", cross_table + "." + connector1)
-                .where(table1 + ".id", "=", this.id.ToString())
-                .get();
-
-            Collection<U> models = new Collection<U>();
-            foreach (Dictionary<string, string> elem in list)
-            {
-                U model = (U)Activator.CreateInstance(typeof(U), false);
-                model.id = Convert.ToInt32(elem["id"]);
-                for (int i = 0; i < columns2.Length; i++)
-                    model.data.Add(columns2[i], elem[columns2[i]]);
-                models.Add(model);
-            }
-            return models;
         }
 
         private static string GetTable()

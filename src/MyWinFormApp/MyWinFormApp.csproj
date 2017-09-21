@@ -71,7 +71,6 @@
     <Compile Include="ManageInventoryForm.Designer.cs">
       <DependentUpon>ManageInventoryForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Mis Clases\AttachExtension.cs" />
     <Compile Include="Mis Clases\Bill.cs" />
     <Compile Include="Mis Clases\BillTable.cs" />
     <Compile Include="Mis Clases\Client.cs" />

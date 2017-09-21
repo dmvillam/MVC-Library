@@ -2,7 +2,7 @@
 *.zip
 
 /src/MVC/bin/
-/src/MVC/obj/
+/src/MVC/obj/*
 
 !/src/
 /src/*

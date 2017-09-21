@@ -16,7 +16,7 @@ namespace MVC
 
         public BelongsToMany(string table1, string table2, string[] columns1,
             string[] columns2, string cross_table, string connector1,
-            string connector2, string id)
+            string connector2, string id, string id_label)
         {
             this.cross_table = cross_table;
             this.connector1 = connector1;
@@ -34,9 +34,9 @@ namespace MVC
             foreach (Dictionary<string, string> elem in list)
             {
                 T model = (T)Activator.CreateInstance(typeof(T), false);
-                model.id = Convert.ToInt32(elem["id"]);
-                for (int i = 0; i < columns2.Length; i++)
-                    model.data.Add(columns2[i], elem[columns2[i]]);
+                model.id = Convert.ToInt32(elem[id_label]);
+                foreach (string column in columns2)
+                    model.data.Add(column, elem[column]);
                 this.Add(model);
             }
         }

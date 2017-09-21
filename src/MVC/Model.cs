@@ -22,6 +22,15 @@ namespace MVC
      * in order to not need anymore data field
      */
 
+    /*
+     * TODO:
+     * https://stackoverflow.com/questions/26669400/insert-quote-in-mysql-using-c-sharp
+     * that page contains info about how to reduce sql injection vulnerability
+     * on sql queries, we could modify DBConnect with that info, but i suspect
+     * it would imply addding a new Dictionary<string,string> containing
+     * data types info for each variable the tables need....
+     */
+
     public abstract class Model<T> where T : Model<T>
     {
         public int id;
@@ -73,8 +82,8 @@ namespace MVC
 
             DBConnect dbconnect = new DBConnect(typeof(T));
             List<string> list = new List<string>();
-            for (int i = 0; i < columns.Length; i++)
-                list.Add(columns[i] + "='" + this.data[columns[i]] + "'");
+            foreach (string column in columns)
+                list.Add(ParseNullAndBoolean(column, this.data[column])); // Format: "{0} = '{1}'"
             dbconnect.Update(this.id, list);
         }
 
@@ -158,7 +167,8 @@ namespace MVC
         {
             return new HasMany<U>(Model<T>.GetTable(),
                 Model<U>.GetTable(), Model<U>.GetColumns(),
-                Model<U>.GetConnector<T>(), this.id.ToString());
+                Model<U>.GetConnector<T>(), this.id.ToString(),
+                Model<U>.GetIdLabel());
         }
 
         public BelongsToMany<U> belongsToMany<U>()
@@ -168,7 +178,7 @@ namespace MVC
                 Model<U>.GetTable(), Model<T>.GetColumns(),
                 Model<U>.GetColumns(), Model<T>.GetCrossTable<U>(),
                 Model<U>.GetConnector<T>(), Model<T>.GetConnector<U>(),
-                this.id.ToString());
+                this.id.ToString(), Model<U>.GetIdLabel());
         }
 
         private static string GetTable()
@@ -178,7 +188,7 @@ namespace MVC
                 .GetValue(null).ToString();
         }
 
-        private static string[] GetColumns()
+        public static string[] GetColumns()
         {
             return (string[])typeof(T)
                 .GetField("Columns", BindingFlags.NonPublic | BindingFlags.Static)
@@ -218,9 +228,8 @@ namespace MVC
                 T model = (T)Activator.CreateInstance(typeof(T), false);
                 string id_label = Model<T>.GetIdLabel();
                 model.id = Convert.ToInt32(elem[id_label]);
-                for (int i = 0; i < columns.Length; i++)
-                    if (columns[i] != id_label)
-                        model.data.Add(columns[i], elem[columns[i]]);
+                foreach (string column in columns)
+                    model.data.Add(column, elem[column]);
                 models.Add(model);
             }
             return models;
@@ -229,14 +238,31 @@ namespace MVC
         private static string ParseNullAndBoolean(Dictionary<string, string>.ValueCollection values)
         {
             List<string> list = new List<string>();
-            foreach (string s in values)
-            {
-                string to_add = (s != null) ? String.Format("'{0}'", s) : "NULL";
-                to_add = (s == "True") ? "True" : to_add;
-                to_add = (s == "False") ? "False" : to_add;
-                list.Add(to_add);
-            }
+            foreach (string value in values)
+                list.Add(ParseAndEscape(value));
             return String.Join(", ", list);
+        }
+
+        private static string ParseNullAndBoolean(string key, string value)
+        {
+            return String.Format("{0} = {1}", key, ParseAndEscape(value));
+        }
+
+        private static string ParseAndEscape(string s)
+        {
+            string to_add = s;
+            if (s != null)
+            {
+                if (s.Contains("'") && s.Contains("\""))
+                    to_add = "'Bad post. Sorry. You better copypaste old post.'";
+                else to_add = (s.Contains("'")) ?
+                        String.Format("\"{0}\"", to_add) : to_add = String.Format("'{0}'", to_add);
+            }
+            else to_add = "NULL";
+            to_add = (s == "True") ? "True" : to_add;
+            to_add = (s == "False") ? "False" : to_add;
+            to_add = (s == "NULL") ? "NULL" : to_add;
+            return to_add;
         }
     }
 }

@@ -12,12 +12,12 @@ namespace MVC
     {
         public T first()
         {
-            return this[0];
+            return (this.Count > 0) ? this[0] : null;
         }
 
         public T last()
         {
-            return this[this.Count - 1];
+            return (this.Count > 0) ? this[this.Count - 1] : null;
         }
 
         public Collection<T> get()

@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 
 namespace MVC
 {
-    class DBQuery : DBConnect
+    public class DBQuery : DBConnect
     {
-        private string q_select, q_join, q_where, q_and;
+        private string q_select, q_join, q_where, q_and_or, q_order;
 
         public DBQuery(Type type) : base(type)
         {
             q_select = String.Empty;
             q_join = String.Empty;
             q_where = String.Empty;
-            q_and = string.Empty;
+            q_and_or = string.Empty;
+            q_order = String.Empty;
         }
 
         public static DBQuery use_table(Type type)
@@ -53,7 +54,13 @@ namespace MVC
 
         public DBQuery and(string key1, string oper, string key2)
         {
-            q_and += String.Format("AND {0} {1} {2} ", key1, oper, key2);
+            q_and_or += String.Format("AND {0} {1} {2} ", key1, oper, key2);
+            return this;
+        }
+
+        public DBQuery or(string key1, string oper, string key2)
+        {
+            q_and_or += String.Format("OR {0} {1} {2} ", key1, oper, key2);
             return this;
         }
 
@@ -65,15 +72,21 @@ namespace MVC
 
         public DBQuery and(string condition)
         {
-            q_and += String.Format("AND {0} ", condition);
+            q_and_or += String.Format("AND {0} ", condition);
+            return this;
+        }
+
+        public DBQuery orderby(string parameter, string order)
+        {
+            q_order = String.Format("ORDER BY {0} {1} ", parameter, order);
             return this;
         }
 
         public List<Dictionary<string, string>> get()
         {
             string query;
-            if ((q_select + q_join + q_where + q_and) != String.Empty)
-                query = q_select + q_join + q_where + q_and;
+            if ((q_select + q_join + q_where + q_and_or + q_order) != String.Empty)
+                query = q_select + q_join + q_where + q_and_or + q_order;
             else throw new Exception("Error: you can't have a query without a query request!");
 
             List<Dictionary<string, string>> output = new List<Dictionary<string, string>>();
@@ -84,13 +97,18 @@ namespace MVC
 
                 while (dataReader.Read())
                 {
-                    // TODO: change "id" by id_label, and prevent the .Add()
-                    // execution when columns[i]==id_label
                     Dictionary<string, string> elem = new Dictionary<string, string>();
                     elem.Add(id_label, dataReader[id_label].ToString());
-                    for (int i = 0; i < columns.Length; i++)
-                        if (columns[i] != id_label)
-                            elem.Add(columns[i], dataReader[columns[i]].ToString());
+                    
+                    string[] requested_columns = DBQuery.GetColumnsFromSelect(q_select);
+                    requested_columns = (requested_columns[0] == "*") ? columns : requested_columns;
+                    
+                    foreach (string column in requested_columns)
+                        if (column != id_label)
+                        {
+                            object read = dataReader[column];
+                            elem.Add(column, (read == DBNull.Value) ? null : read.ToString());
+                        }
                     output.Add(elem);
                 }
                 dataReader.Close();
@@ -135,6 +153,33 @@ namespace MVC
                 cmd.ExecuteNonQuery();
                 this.CloseConnection();
             }
+        }
+
+        public Collection<T> get<T>() where T : Model<T>
+        {
+            List<Dictionary<string, string>> list = this.get();
+
+            string[] columns = Model<T>.GetColumns();
+            Collection<T> collection = new Collection<T>();
+
+            foreach (Dictionary<string, string> elem in list)
+            {
+                T model = (T)Activator.CreateInstance(typeof(T), false);
+                model.id = Convert.ToInt32(elem[id_label]);
+                foreach (string column in columns)
+                    model.data.Add(column, elem[column]);
+                collection.Add(model);
+            }
+            return collection;
+        }
+
+        private static string[] GetColumnsFromSelect(string selection_sintax)
+        {
+            string[] parse = selection_sintax.Split(' ');
+            string[] columns = parse[1].Split(',');
+            for (int i = 0; i < columns.Length; i++)
+                columns[i] = columns[i].Trim();
+            return columns;
         }
     }
 }

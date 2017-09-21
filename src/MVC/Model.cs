@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace MVC
 {
+    // TODO: remove int id field, and add some sort of
+    // 'protected string primaryKey = "id"', being the value of "id" the default
+    // that you can change into the derived models
+
     public abstract class Model<T> where T : Model<T>
     {
         public int id;
@@ -43,14 +47,10 @@ namespace MVC
             T model = (T)Activator.CreateInstance(typeof(T), false);
 
             DBConnect connect = new DBConnect(typeof(T));
-            connect.Insert(new string[] {
+            model.id = connect.Insert(new string[] {
                 String.Join(", ", data.Keys.ToArray<string>()),
                 "'" + String.Join("', '", data.Values.ToArray<string>()) + "'"
             });
-            List<Dictionary<string, string>> list = connect.Select();
-            model.id = Convert.ToInt32(list[list.Count - 1][connect.id_label]);
-            model.data = list[list.Count - 1];
-
             return model;
         }
 
@@ -78,9 +78,11 @@ namespace MVC
             foreach (Dictionary<string, string> elem in list)
             {
                 T model = (T)Activator.CreateInstance(typeof(T), false);
-                model.id = Convert.ToInt32(elem["id"]);
+                string id_label = Model<T>.GetIdLabel();
+                model.id = Convert.ToInt32(elem[id_label]);
                 for (int i = 0; i < columns.Length; i++)
-                    model.data.Add(columns[i], elem[columns[i]]);
+                    if (columns[i] != id_label)
+                        model.data.Add(columns[i], elem[columns[i]]);
                 models.Add(model);
             }
             return models;

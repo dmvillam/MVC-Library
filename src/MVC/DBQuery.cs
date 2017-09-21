@@ -65,6 +65,8 @@ namespace MVC
 
                 while (dataReader.Read())
                 {
+                    // TODO: change "id" by id_label, and prevent the .Add()
+                    // execution when columns[i]==id_label
                     Dictionary<string, string> elem = new Dictionary<string, string>();
                     elem.Add("id", dataReader["id"].ToString());
                     for (int i = 0; i < columns.Length; i++)
@@ -81,9 +83,9 @@ namespace MVC
             }
         }
 
-        public void insert(Dictionary<string, string> inserts)
+        public int insert(Dictionary<string, string> inserts)
         {
-            this.Insert(new string[] {
+            return this.Insert(new string[] {
                 String.Join(",", inserts.Keys.ToArray<string>()),
                 String.Join(",", inserts.Values.ToArray<string>())
             });

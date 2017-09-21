@@ -106,18 +106,27 @@ namespace MVC
             }
         }
         // Insert statement
-        public void Insert(string[] parameters)
+        public int Insert(string[] parameters)
         {
-            string query = String.Format("INSERT INTO {0} ({1}) VALUES ({2})",
+            int id = -1;
+            string query = String.Format("INSERT INTO {0} ({1}) VALUES ({2});",
                 table, parameters[0], parameters[1]);
+            query += String.Format("SELECT MAX({0}) FROM {1};", id_label, table);
 
             // Open connection
             if (this.OpenConnection() == true)
             {
                 MySqlCommand cmd = new MySqlCommand(query, connection);
-                cmd.ExecuteNonQuery();
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    string label = String.Format("MAX({0})", id_label);
+                    id = Convert.ToInt32(dataReader[label]);
+                }
+                dataReader.Close();
                 this.CloseConnection();
             }
+            return id;
         }
         // Update statement
         public void Update(int id, List<string> values)
@@ -185,7 +194,8 @@ namespace MVC
                     Dictionary<string, string> elem = new Dictionary<string, string>();
                     elem.Add(id_label, dataReader[id_label].ToString());
                     for (int i = 0; i < columns.Length; i++)
-                        elem.Add(columns[i], dataReader[columns[i]].ToString());
+                        if (columns[i] != id_label)
+                            elem.Add(columns[i], dataReader[columns[i]].ToString());
                     output.Add(elem);
                 }
                 dataReader.Close();

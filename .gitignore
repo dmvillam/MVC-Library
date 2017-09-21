@@ -3,6 +3,8 @@
 
 /src/MVC/bin/
 /src/MyWinFormApp/bin/
+/src/MVC/obj/
+/src/MyWinFormApp/obj/
 
 !/src/
 /src/*

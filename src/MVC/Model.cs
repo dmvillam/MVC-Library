@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MVC
 {
-    public class Model<T> where T : Model<T>
+    public abstract class Model<T> where T : Model<T>
     {
         public int id;
         public Dictionary<string, string> data;
@@ -121,13 +121,30 @@ namespace MVC
         }
         public dynamic hasMany<U>(string connector)
         {
+            
+            string table1 = (string)typeof(T)
+                .GetMethod("GetTable", BindingFlags.NonPublic | 
+                    BindingFlags.Public | BindingFlags.Static |
+                    BindingFlags.FlattenHierarchy)
+                .Invoke(null, new object[] { });
+            string table2 = (string)typeof(U)
+                .GetMethod("GetTable", BindingFlags.NonPublic |
+                    BindingFlags.Public | BindingFlags.Static |
+                    BindingFlags.FlattenHierarchy)
+                .Invoke(null, new object[] { });
+            string[] columns2 = (string[])typeof(U)
+                .GetMethod("GetColumns", BindingFlags.NonPublic |
+                    BindingFlags.Public | BindingFlags.Static |
+                    BindingFlags.FlattenHierarchy)
+                .Invoke(null, new object[] { });
+
             dynamic m1 = Activator.CreateInstance(typeof(T), false);
             dynamic m2 = Activator.CreateInstance(typeof(U), false);
             List<Dictionary<string, string>> list =
-                DBQuery.use_table(m2.table, m2.columns)
-                .select(new string[] { m2.table + ".*" })
-                .inner_join(m1.table, m2.table + "." + connector, "=", m1.table + ".id")
-                .where(m1.table + ".id", "=", this.id.ToString())
+                DBQuery.use_table(table2, columns2)
+                .select(new string[] { table2 + ".*" })
+                .inner_join(table1, table2 + "." + connector, "=", table1 + ".id")
+                .where(table1 + ".id", "=", this.id.ToString())
                 .get();
 
             List<U> models = new List<U>();
@@ -135,8 +152,8 @@ namespace MVC
             {
                 dynamic model = Activator.CreateInstance(typeof(U), false);
                 model.id = Convert.ToInt32(elem["id"]);
-                for (int i = 0; i < m2.columns.Length; i++)
-                    model.data.Add(m2.columns[i], elem[m2.columns[i]]);
+                for (int i = 0; i < columns2.Length; i++)
+                    model.data.Add(columns2[i], elem[columns2[i]]);
                 models.Add(model);
             }
             return models;
@@ -198,13 +215,13 @@ namespace MVC
             return models;
         }
 
-        private static string GetTable()
+        public static string GetTable()
         {
             return typeof(T)
                 .GetField("Table", BindingFlags.NonPublic | BindingFlags.Static)
                 .GetValue(null).ToString();
         }
-        private static string[] GetColumns()
+        public static string[] GetColumns()
         {
             return (string[])typeof(T)
                 .GetField("Columns", BindingFlags.NonPublic | BindingFlags.Static)

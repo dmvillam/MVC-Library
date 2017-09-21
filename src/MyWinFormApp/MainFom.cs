@@ -15,26 +15,6 @@ namespace MyWinFormApp
         public MainForm()
         {
             InitializeComponent();
-
-            /*List<int> buying_items = new List<int> { 1, 3, 2, 4, 7, 2, 3 };
-            Bill bill = Bill.create(new Dictionary<string, string> {
-                {"notas", ""},
-                {"id_cliente", ""}
-            });*/
-
-            /*Client
-                .find(1).bills()
-                .Add(Bill.create(new Dictionary<string, string>{
-                    {"notas", "asdaddfgfhghjghjkggdg"},
-                    {"id_cliente", "3"}
-                }
-                ));*/
-
-            //Client.find(1).bills().attach(1);
-
-            //Client client = Client.find(1);
-            Bill bill = Bill.find(1);
-            //Item item = Item.find(1);
         }
 
         private void createBillButton_Click(object sender, EventArgs e)

@@ -41,6 +41,7 @@ namespace MVC
         //Initialize values
         protected void Initialize()
         {
+            // Default values
             Dictionary<string, string> config_data
                 = new Dictionary<string, string> {
                 {"server", "localhost"},

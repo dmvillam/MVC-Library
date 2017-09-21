@@ -9,11 +9,10 @@ namespace MVC
 {
     class DBQuery : DBConnect
     {
-        private string ext_query, q_select, q_join, q_where;
+        private string q_select, q_join, q_where;
 
         public DBQuery(Type type) : base(type)
         {
-            ext_query = String.Empty;
             q_select = String.Empty;
             q_join = String.Empty;
             q_where = String.Empty;
@@ -53,14 +52,15 @@ namespace MVC
 
         public List<Dictionary<string, string>> get()
         {
+            string query;
             if ((q_select + q_join + q_where) != String.Empty)
-                ext_query = q_select + q_join + q_where;
+                query = q_select + q_join + q_where;
             else throw new Exception("Error: you can't have a query without a query request!");
 
             List<Dictionary<string, string>> output = new List<Dictionary<string, string>>();
             if (this.OpenConnection() == true)
             {
-                MySqlCommand cmd = new MySqlCommand(ext_query, connection);
+                MySqlCommand cmd = new MySqlCommand(query, connection);
                 MySqlDataReader dataReader = cmd.ExecuteReader();
 
                 while (dataReader.Read())
@@ -78,6 +78,40 @@ namespace MVC
             else
             {
                 return output;
+            }
+        }
+
+        public void insert(Dictionary<string, string> inserts)
+        {
+            this.Insert(new string[] {
+                String.Join(",", inserts.Keys.ToArray<string>()),
+                String.Join(",", inserts.Values.ToArray<string>())
+            });
+        }
+
+        public void delete(string key, string oper, int value)
+        {
+            string query = String.Format("DELETE FROM {0} WHERE {1} {2} {3}",
+                this.table, key, oper, value);
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.ExecuteNonQuery();
+                this.CloseConnection();
+            }
+        }
+
+        public void delete(string key1, string oper1, int value1,
+            string key2, string oper2, int value2)
+        {
+            string query = String.Format(
+                "DELETE FROM {0} WHERE {1} {2} {3} AND {4} {5} {6}",
+                this.table, key1, oper1, value1, key2, oper2, value2);
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.ExecuteNonQuery();
+                this.CloseConnection();
             }
         }
     }

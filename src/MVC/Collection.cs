@@ -19,5 +19,10 @@ namespace MVC
         {
             return this[this.Count - 1];
         }
+
+        public Collection<T> get()
+        {
+            return this;
+        }
     }
 }

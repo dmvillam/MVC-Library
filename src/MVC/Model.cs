@@ -68,24 +68,11 @@ namespace MVC
 
         public static Collection<T> all()
         {
-            string table = Model<T>.GetTable();
-            string[] columns = Model<T>.GetColumns();
-
             T m = (T)Activator.CreateInstance(typeof(T), false);
             DBConnect connect = new DBConnect(typeof(T));
             List<Dictionary<string, string>> list = connect.Select();
-            Collection<T> models = new Collection<T>();
-            foreach (Dictionary<string, string> elem in list)
-            {
-                T model = (T)Activator.CreateInstance(typeof(T), false);
-                string id_label = Model<T>.GetIdLabel();
-                model.id = Convert.ToInt32(elem[id_label]);
-                for (int i = 0; i < columns.Length; i++)
-                    if (columns[i] != id_label)
-                        model.data.Add(columns[i], elem[columns[i]]);
-                models.Add(model);
-            }
-            return models;
+
+            return Model<T>.ListToCollection(list);
         }
 
         public static void destroy(int id)
@@ -96,6 +83,16 @@ namespace MVC
             dynamic model = Activator.CreateInstance(typeof(T), false);
             DBConnect connect = new DBConnect(typeof(T));
             connect.Delete(id);
+        }
+
+        public static Collection<T> where(string key, string oper, string value)
+        {
+            List<Dictionary<string, string>> list
+                = DBQuery.use_table(typeof(T))
+                .select(new string[] { "*" })
+                .where(key, oper, value).get();
+
+            return Model<T>.ListToCollection(list);
         }
 
         protected dynamic hasOne<U>()
@@ -175,6 +172,23 @@ namespace MVC
             };
             list.Sort();
             return String.Format("{0}_{1}", list[0], list[1]);
+        }
+
+        private static Collection<T> ListToCollection(List<Dictionary<string, string>> list)
+        {
+            string[] columns = Model<T>.GetColumns();
+            Collection<T> models = new Collection<T>();
+            foreach (Dictionary<string, string> elem in list)
+            {
+                T model = (T)Activator.CreateInstance(typeof(T), false);
+                string id_label = Model<T>.GetIdLabel();
+                model.id = Convert.ToInt32(elem[id_label]);
+                for (int i = 0; i < columns.Length; i++)
+                    if (columns[i] != id_label)
+                        model.data.Add(columns[i], elem[columns[i]]);
+                models.Add(model);
+            }
+            return models;
         }
     }
 }

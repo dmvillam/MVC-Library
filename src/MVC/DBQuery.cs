@@ -10,35 +10,47 @@ namespace MVC
     class DBQuery : DBConnect
     {
         private string ext_query, q_select, q_join, q_where;
-        public DBQuery(string table, string[] columns)
-            : base(table, columns, "")
+
+        public DBQuery(Type type) : base(type)
         {
             ext_query = String.Empty;
             q_select = String.Empty;
             q_join = String.Empty;
             q_where = String.Empty;
         }
-        public static DBQuery use_table(string table, string[] columns)
+
+        public static DBQuery use_table(Type type)
         {
-            return new DBQuery(table, columns);
+            return new DBQuery(type);
         }
+
+        public static DBQuery use_table(Type type, string table)
+        {
+            DBQuery query = new DBQuery(type);
+            query.table = table;
+            return query;
+        }
+
         public DBQuery select(string[] select_vars)
         {
             q_select = String.Format("SELECT {0} FROM {1} ",
                 string.Join(",", select_vars), table);
             return this;
         }
+
         public DBQuery inner_join(string table, string key1, string oper, string key2)
         {
             q_join += String.Format("INNER JOIN {0} ON {1} {2} {3} ",
                 table, key1, oper, key2);
             return this;
         }
+
         public DBQuery where(string key1, string oper, string key2)
         {
             q_where = String.Format("WHERE {0} {1} {2} ", key1, oper, key2);
             return this;
         }
+
         public List<Dictionary<string, string>> get()
         {
             if ((q_select + q_join + q_where) != String.Empty)

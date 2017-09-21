@@ -28,6 +28,13 @@ namespace MVC
                     BindingFlags.Public | BindingFlags.Static |
                     BindingFlags.FlattenHierarchy)
                 .Invoke(null, new object[] { model_id });
+
+            string cross_table = (string)typeof(T)
+                .GetMethod("GetCrossTable",
+                    BindingFlags.NonPublic | BindingFlags.Static)
+                .MakeGenericMethod(new[] { typeof(T) })
+                .Invoke(null, new object[] { });
+
             this.Add(model);
         }
     }

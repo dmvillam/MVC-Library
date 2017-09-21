@@ -17,13 +17,14 @@ namespace MVC
             id = 0;
             data = new Dictionary<string, string>();
         }
+
         public static T find(int id)
         {
             string table = Model<T>.GetTable();
             string[] columns = Model<T>.GetColumns();
             T model = (T)Activator.CreateInstance(typeof(T), false);
 
-            DBConnect connect = new DBConnect(table, columns, Model<T>.GetIdLabel());
+            DBConnect connect = new DBConnect(typeof(T));
             List<string> values = connect.Select(id);
 
             if (values.Count > 0)
@@ -35,6 +36,7 @@ namespace MVC
             }
             else return null;
         }
+
         public static T create(Dictionary<string, string> data)
         {
             string table = Model<T>.GetTable();
@@ -45,7 +47,7 @@ namespace MVC
             for (int i = 0; i < columns.Length; i++)
                 values.Add(data[columns[i]]);
 
-            DBConnect connect = new DBConnect(table, columns, Model<T>.GetIdLabel());
+            DBConnect connect = new DBConnect(typeof(T));
             connect.Insert(new string[] {
                 String.Join(",", columns),
                 "'" + String.Join("','", values) + "'"
@@ -56,24 +58,26 @@ namespace MVC
 
             return model;
         }
+
         public void save()
         {
             string table = Model<T>.GetTable();
             string[] columns = Model<T>.GetColumns();
 
-            DBConnect dbconnect = new DBConnect(table, columns, Model<T>.GetIdLabel());
+            DBConnect dbconnect = new DBConnect(typeof(T));
             List<string> list = new List<string>();
             for (int i = 0; i < columns.Length; i++)
                 list.Add(columns[i] + "='" + this.data[columns[i]] + "'");
             dbconnect.Update(this.id, list);
         }
+
         public static Collection<T> all()
         {
             string table = Model<T>.GetTable();
             string[] columns = Model<T>.GetColumns();
 
             T m = (T)Activator.CreateInstance(typeof(T), false);
-            DBConnect connect = new DBConnect(table, columns, Model<T>.GetIdLabel());
+            DBConnect connect = new DBConnect(typeof(T));
             List<Dictionary<string, string>> list = connect.Select();
             Collection<T> models = new Collection<T>();
             foreach (Dictionary<string, string> elem in list)
@@ -86,22 +90,24 @@ namespace MVC
             }
             return models;
         }
+
         public static void destroy(int id)
         {
             string table = Model<T>.GetTable();
             string[] columns = Model<T>.GetColumns();
 
             dynamic model = Activator.CreateInstance(typeof(T), false);
-            DBConnect connect = new DBConnect(table, columns, Model<T>.GetIdLabel());
+            DBConnect connect = new DBConnect(typeof(T));
             connect.Delete(id);
         }
+
         protected dynamic hasOne<U>()
         {
             string table = Model<T>.GetTable();
             string[] columns = Model<T>.GetColumns();
 
             // TODO: fix and test this code!!
-            DBConnect connect = new DBConnect(table, columns, Model<T>.GetIdLabel());
+            DBConnect connect = new DBConnect(typeof(T));
 
             dynamic model = Activator.CreateInstance(typeof(U), false);
             model.id = 0;
@@ -111,92 +117,64 @@ namespace MVC
 
             return model;
         }
-        protected dynamic belongsTo<U>()
-        {
-            string connector = Model<T>.GetConnector<U>();
 
-            dynamic model = Activator.CreateInstance(typeof(U), false);
-            int key = Convert.ToInt32(this.data[connector]);
-            model = typeof(U)
-                .GetMethod("find", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
-                .Invoke(null, new object[] { key });
-            return model;
+        protected dynamic belongsTo<U>()
+            where U : Model<U>
+        {
+            return (U)new BelongsTo<U>(this, Model<T>.GetConnector<U>());
         }
+
         public Collection<U> hasMany<U>()
             where U : Model<U>
         {
-            string table1 = Model<T>.GetTable();
-            string table2 = Model<U>.GetTable();
-            string[] columns2 = Model<U>.GetColumns();
-            string connector = Model<U>.GetConnector<T>();
+            return new HasMany<U>(Model<T>.GetTable(),
+                Model<U>.GetTable(), Model<U>.GetColumns(),
+                Model<U>.GetConnector<T>(),
+                Activator.CreateInstance(typeof(T), false),
+                Activator.CreateInstance(typeof(U), false));
 
-            dynamic m1 = Activator.CreateInstance(typeof(T), false);
-            dynamic m2 = Activator.CreateInstance(typeof(U), false);
-            List<Dictionary<string, string>> list =
-                DBQuery.use_table(table2, columns2)
-                .select(new string[] { table2 + ".*" })
-                .inner_join(table1, table2 + "." + connector, "=", table1 + ".id")
-                .where(table1 + ".id", "=", this.id.ToString())
-                .get();
+            //string table1 = Model<T>.GetTable();
+            //string table2 = Model<U>.GetTable();
+            //string[] columns2 = Model<U>.GetColumns();
+            //string connector = Model<U>.GetConnector<T>();
 
-            Collection<U> models = new Collection<U>();
-            foreach (Dictionary<string, string> elem in list)
-            {
-                U model = (U)Activator.CreateInstance(typeof(U), false);
-                model.id = Convert.ToInt32(elem["id"]);
-                for (int i = 0; i < columns2.Length; i++)
-                    model.data.Add(columns2[i], elem[columns2[i]]);
-                models.Add(model);
-            }
-            return models;
+            //dynamic m1 = Activator.CreateInstance(typeof(T), false);
+            //dynamic m2 = Activator.CreateInstance(typeof(U), false);
+            //List<Dictionary<string, string>> list =
+            //    DBQuery.use_table(typeof(U))
+            //    .select(new string[] { table2 + ".*" })
+            //    .inner_join(table1, table2 + "." + connector, "=", table1 + ".id")
+            //    .where(table1 + ".id", "=", this.id.ToString())
+            //    .get();
+
+            //Collection<U> models = new Collection<U>();
+            //foreach (Dictionary<string, string> elem in list)
+            //{
+            //    U model = (U)Activator.CreateInstance(typeof(U), false);
+            //    model.id = Convert.ToInt32(elem["id"]);
+            //    for (int i = 0; i < columns2.Length; i++)
+            //        model.data.Add(columns2[i], elem[columns2[i]]);
+            //    models.Add(model);
+            //}
+            //return models;
         }
-        /*
-         * U -> Item
-         * T -> Bill
-         */
-        public dynamic hasMany<U>(Dictionary<string, string> connector, string cross_table)
-            where U : Model<U>
-        {
-            string table1 = Model<U>.GetTable();
-            string[] columns1 = Model<U>.GetColumns();
-            string table2 = Model<T>.GetTable();
 
-            List<Dictionary<string, string>> list =
-                DBQuery.use_table(cross_table, columns1)
-                .select(new string[] { table1 + ".*" })
-                .inner_join(table2, table2 + ".id", "=", cross_table + "." + connector[typeof(T).Name])
-                .inner_join(table1, table1 + ".id", "=", cross_table + "." + connector[typeof(U).Name])
-                .where(table2 + ".id", "=", this.id.ToString())
-                .get();
-
-            Collection<U> models = new Collection<U>();
-            foreach (Dictionary<string, string> elem in list)
-            {
-                U model = (U)Activator.CreateInstance(typeof(U), false);
-                model.id = Convert.ToInt32(elem["id"]);
-                for (int i = 0; i < columns1.Length; i++)
-                    model.data.Add(columns1[i], elem[columns1[i]]);
-                models.Add(model);
-            }
-            return models;
-        }
-        /*
-         * U -> Bill
-         * T -> Item
-         */
-        public dynamic belongsToMany<U>(Dictionary<string, string> connector, string cross_table)
+        public dynamic belongsToMany<U>()
             where U : Model<U>
         {
             string table1 = Model<T>.GetTable();
             string[] columns1 = Model<T>.GetColumns();
             string table2 = Model<U>.GetTable();
             string[] columns2 = Model<U>.GetColumns();
+            string cross_table = Model<T>.GetCrossTable<U>();
+            string connector1 = Model<U>.GetConnector<T>();
+            string connector2 = Model<T>.GetConnector<U>();
 
             List<Dictionary<string, string>> list =
-                DBQuery.use_table(cross_table, columns2)
+                DBQuery.use_table(typeof(U), cross_table)
                 .select(new string[] { table2 + ".*" })
-                .inner_join(table2, table2 + ".id", "=", cross_table + "." + connector[typeof(U).Name])
-                .inner_join(table1, table1 + ".id", "=", cross_table + "." + connector[typeof(T).Name])
+                .inner_join(table2, table2 + ".id", "=", cross_table + "." + connector2)
+                .inner_join(table1, table1 + ".id", "=", cross_table + "." + connector1)
                 .where(table1 + ".id", "=", this.id.ToString())
                 .get();
 
@@ -235,6 +213,15 @@ namespace MVC
             return ((Dictionary<string, string>)typeof(T)
                 .GetField("Connectors", BindingFlags.NonPublic | BindingFlags.Static)
                 .GetValue(null))[typeof(myclass).Name];
+        }
+        private static string GetCrossTable<U>() where U : Model<U>
+        {
+            List<string> list = new List<string> {
+                Model<T>.GetTable(),
+                Model<U>.GetTable(),
+            };
+            list.Sort();
+            return String.Format("{0}_{1}", list[0], list[1]);
         }
     }
 }

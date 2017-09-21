@@ -47,9 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BelongsTo.cs" />
     <Compile Include="Collection.cs" />
     <Compile Include="DBConnect.cs" />
     <Compile Include="DBQuery.cs" />
+    <Compile Include="HasMany.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

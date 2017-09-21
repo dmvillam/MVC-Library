@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 using MySql.Data.MySqlClient;
 using System.IO;
@@ -24,12 +25,18 @@ namespace MVC
         protected string[] columns;
 
         // Constructor
-        public DBConnect(string table, string[] columns, string id_label)
+        public DBConnect(Type type)
         {
             Initialize();
-            this.table = table;
-            this.columns = columns;
-            this.id_label = id_label;
+            this.table = (string)type
+                .GetField("Table", BindingFlags.NonPublic | BindingFlags.Static)
+                .GetValue(null);
+            this.columns = (string[])type
+                .GetField("Columns", BindingFlags.NonPublic | BindingFlags.Static)
+                .GetValue(null);
+            FieldInfo f = type.GetField("IdLabel",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            this.id_label = (f != null) ? (string)f.GetValue(null) : "id";
         }
         //Initialize values
         protected void Initialize()

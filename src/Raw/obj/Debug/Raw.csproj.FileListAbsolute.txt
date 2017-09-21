@@ -1,5 +1,0 @@
-C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\src\Raw\bin\Debug\Raw.dll
-C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\src\Raw\bin\Debug\Raw.pdb
-C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\src\Raw\obj\Debug\Raw.csprojResolveAssemblyReference.cache
-C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\src\Raw\obj\Debug\Raw.dll
-C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\src\Raw\obj\Debug\Raw.pdb

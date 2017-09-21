@@ -2,14 +2,8 @@
 *.zip
 
 /src/MVC/bin/
-/src/MyWinFormApp/bin/
 /src/MVC/obj/
-/src/MyWinFormApp/obj/
 
 !/src/
 /src/*
 !/src/MVC/
-!/src/MyWinFormApp/
-!/src/Raw/
-!/src/MyWinFormApp.sln
-!/src/MyWinFormApp.v12.suo

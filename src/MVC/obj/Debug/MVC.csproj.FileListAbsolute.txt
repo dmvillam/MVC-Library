@@ -8,3 +8,5 @@ C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\src\MVC\obj\Debug\MVC.d
 C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\src\MVC\bin\Debug\MVC.dll
 C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\src\MVC\bin\Debug\MVC.pdb
 C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\src\MVC\obj\Debug\MVC.pdb
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\src\MVC\bin\Debug\Raw.dll
+C:\Users\Admin\Important Stuff\Proyectos C#\MyWinFormApp\src\MVC\bin\Debug\Raw.pdb

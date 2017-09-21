@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVC", "MVC\MVC.csproj", "{1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tset", "Tset\Tset.csproj", "{403ACC63-F2D2-44F3-A8E2-098B030A81B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Raw", "Raw\Raw.csproj", "{712A4164-F8EA-4B89-8DDD-12721EF24B6B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{403ACC63-F2D2-44F3-A8E2-098B030A81B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{403ACC63-F2D2-44F3-A8E2-098B030A81B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{403ACC63-F2D2-44F3-A8E2-098B030A81B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{712A4164-F8EA-4B89-8DDD-12721EF24B6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{712A4164-F8EA-4B89-8DDD-12721EF24B6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{712A4164-F8EA-4B89-8DDD-12721EF24B6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{712A4164-F8EA-4B89-8DDD-12721EF24B6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.IO;
 using System.Diagnostics;
+using Raw;
 
 namespace MVC
 {
     public class DBConnect
     {
+        public string id_label;
+
         protected MySqlConnection connection;
         private string server;
         private string database;
@@ -21,19 +24,32 @@ namespace MVC
         protected string[] columns;
 
         // Constructor
-        public DBConnect(string table, string[] columns)
+        public DBConnect(string table, string[] columns, string id_label)
         {
             Initialize();
             this.table = table;
             this.columns = columns;
+            this.id_label = id_label;
         }
         //Initialize values
         protected void Initialize()
         {
-            server = "localhost";
-            database = "facturación";
-            uid = "root";
-            password = "armagedon2";
+            Dictionary<string, string> config_data
+                = new Dictionary<string, string> {
+                {"server", "localhost"},
+                {"database", "facturación"},
+                {"uid", "root"},
+                {"password", "armagedon2"}
+            };
+            
+            if (File.Exists("dbconfig.ini"))
+                RawParser.Parse1(Raw.Raw.Get("dbconfig.ini"), config_data);
+
+            server = config_data["server"];
+            database = config_data["database"];
+            uid = config_data["uid"];
+            password = config_data["password"];
+
             string connectionString = string.Format(
                 "SERVER={0};DATABASE={1};UID={2};PASSWORD={3};",
                 server, database, uid, password);
@@ -78,7 +94,8 @@ namespace MVC
         // Insert statement
         public void Insert(string[] parameters)
         {
-            string query = "INSERT INTO " + table + " (" + parameters[0] + ") VALUES (" + parameters[1] + ")";
+            string query = String.Format("INSERT INTO {0} ({1}) VALUES ({2})",
+                table, parameters[0], parameters[1]);
 
             // Open connection
             if (this.OpenConnection() == true)
@@ -91,7 +108,8 @@ namespace MVC
         // Update statement
         public void Update(int id, List<string> values)
         {
-            string query = "UPDATE " + table + " SET " + String.Join(",", values) + " WHERE id='" + id + "'";
+            string query = String.Format("UPDATE {0} SET {1} WHERE {2}='{3}'",
+                table, String.Join(",", values), id_label, id);
             if (this.OpenConnection() == true)
             {
                 MySqlCommand cmd = new MySqlCommand(query, connection);
@@ -104,7 +122,8 @@ namespace MVC
         // Delete statement
         public void Delete(int id)
         {
-            string query = "DELETE FROM " + table + " WHERE id='" + id + "'";
+            string query = String.Format("DELETE FROM {0} WHERE {1}='{2}'",
+                table, id_label, id);
             if (this.OpenConnection() == true)
             {
                 MySqlCommand cmd = new MySqlCommand(query, connection);
@@ -114,7 +133,8 @@ namespace MVC
         }
         public List<string> Select(int id)
         {
-            string query = "SELECT * FROM " + table + " WHERE id = " + id + ";";
+            string query = String.Format("SELECT * FROM {0} WHERE {1} = {2};",
+                table, id_label, id);
 
             List<string> list = new List<string>();
             if (this.OpenConnection() == true)
@@ -149,7 +169,7 @@ namespace MVC
                 while (dataReader.Read())
                 {
                     Dictionary<string, string> elem = new Dictionary<string, string>();
-                    elem.Add("id", dataReader["id"].ToString());
+                    elem.Add(id_label, dataReader[id_label].ToString());
                     for (int i = 0; i < columns.Length; i++)
                         elem.Add(columns[i], dataReader[columns[i]].ToString());
                     output.Add(elem);

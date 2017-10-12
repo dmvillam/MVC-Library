@@ -7,8 +7,6 @@
 /src/*
 !/src/MVC/
 
-!/src/MVC/bin/
-
 /src/MVC/bin/*
 !/src/MVC/bin/Debug/
 

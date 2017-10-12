@@ -32,11 +32,10 @@
   <ItemGroup>
     <Reference Include="MySql.Data, Version=6.1.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\MySql.Data.dll</HintPath>
+      <HintPath>..\..\..\MyWinFormApp\src\MyWinFormApp\bin\Debug\MySql.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Raw, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Raw\bin\Debug\Raw.dll</HintPath>
+    <Reference Include="Raw">
+      <HintPath>..\..\..\MyWinFormApp\src\Raw\bin\Debug\Raw.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

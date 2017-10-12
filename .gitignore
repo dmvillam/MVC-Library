@@ -1,14 +1,12 @@
 *.rar
 *.zip
 
-/src/MVC/bin/
 /src/MVC/obj/
 
 !/src/
 /src/*
 !/src/MVC/
 
-/src/MVC/*
 !/src/MVC/bin/
 
 /src/MVC/bin/*

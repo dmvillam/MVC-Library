@@ -7,3 +7,4 @@
 !/src/
 /src/*
 !/src/MVC/
+!/src/MVC/bin/Debug/MySql.Data.dll

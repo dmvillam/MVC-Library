@@ -7,4 +7,12 @@
 !/src/
 /src/*
 !/src/MVC/
+
+/src/MVC/*
+!/src/MVC/bin/
+
+/src/MVC/bin/*
+!/src/MVC/bin/Debug/
+
+/src/MVC/bin/Debug/*
 !/src/MVC/bin/Debug/MySql.Data.dll
